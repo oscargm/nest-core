@@ -12,7 +12,7 @@ import { Permission } from 'permissions/models';
 export class AddRoleHandler implements ICommandHandler<AddRoleCommand> {
   constructor(
     @InjectRepository(Role)
-    private readonly repository: Repository<Role>,
+    private readonly roleRepository: Repository<Role>,
     private readonly publisher: EventPublisher,
   ) {}
 
@@ -20,13 +20,20 @@ export class AddRoleHandler implements ICommandHandler<AddRoleCommand> {
     // TODO: Constrain log to development only !!!
     console.log(clc.greenBright('AddRoleCommand...'));
     const { roleName, roleEnabled, rolePermissions } = command;
-    const role: Role = await this.repository.findOne({
+    const role: Role = await this.roleRepository.findOne({
       name: roleName,
     });
+    console.log('rolePermissions.length', rolePermissions.length);
     if (!role) {
-      const permissions: Permission[] = await this.repository.findByIds(
-        rolePermissions,
-      );
+      const permissions: Permission[] = [];
+
+      if (rolePermissions.length > 0) {
+        // TODO: find provider configuration to access to permissions
+        // permissions.push(
+        //   ...(await this.permissionProvider.findByIds(rolePermissions)),
+        // );
+      }
+      console.log('permissions', JSON.stringify(permissions));
       const newRole = {
         ...role,
         name: roleName,
@@ -35,7 +42,7 @@ export class AddRoleHandler implements ICommandHandler<AddRoleCommand> {
       };
       console.log('role', newRole);
       return this.publisher.mergeObjectContext(
-        await this.repository.save(newRole),
+        await this.roleRepository.save(newRole),
       );
     } else {
       console.log(clc.red.bold(`role ${role} already exists`));

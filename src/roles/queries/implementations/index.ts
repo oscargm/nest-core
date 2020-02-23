@@ -1,2 +1,2 @@
-export * from './get-permissions.query';
-export * from './get-permission-by-id.query';
+export * from './get-roles.query';
+export * from './get-role-by-id.query';

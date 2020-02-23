@@ -12,5 +12,5 @@ export class Role extends AbstractAggregatedEntity {
 
   @ManyToMany(type => Permission)
   @JoinTable()
-  categories: Permission[];
+  permissions: Permission[];
 }

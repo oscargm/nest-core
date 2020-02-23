@@ -1,4 +1,4 @@
-import { GetPermissionsHandler } from './get-permissions.handler';
-import { GetPermissionByIdHandler } from './get-permission-by-id.handler';
+import { GetRolesHandler } from './get-roles.handler';
+import { GetRoleByIdHandler } from './get-role-by-id.handler';
 
-export const QueryHandlers = [GetPermissionsHandler, GetPermissionByIdHandler];
+export const QueryHandlers = [GetRolesHandler, GetRoleByIdHandler];
