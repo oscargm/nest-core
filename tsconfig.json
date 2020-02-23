@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./src/",
+    "paths": {
+      "common": ["common"],
+      "permissions/*": ["permissions/*"],
+      "roles/*": ["roles/*"],
+      "users/*": ["users/*"]
+    },
+    "incremental": true
+  },
+  "exclude": ["node_modules", "dist"]
+}
