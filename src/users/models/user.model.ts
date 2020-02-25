@@ -1,5 +1,6 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { AbstractAggregatedEntity } from 'common';
+import { Role } from 'roles/models';
 
 @Entity({ name: 'users' })
 export class User extends AbstractAggregatedEntity {
@@ -11,4 +12,10 @@ export class User extends AbstractAggregatedEntity {
 
   @Column({ length: 50 })
   password: string;
+
+  @OneToMany(
+    type => Role,
+    role => role.id,
+  )
+  roles: Role[];
 }

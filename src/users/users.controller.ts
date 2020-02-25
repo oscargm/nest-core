@@ -24,7 +24,12 @@ export class UsersController {
   async addUser(@Body() dto: AddUserDto) {
     console.log('addUser', dto);
     return this.commandBus.execute(
-      new AddUserCommand(dto.username, dto.userMail, dto.userPass),
+      new AddUserCommand(
+        dto.username,
+        dto.userMail,
+        dto.userPass,
+        dto.userRoles,
+      ),
     );
   }
 
@@ -36,6 +41,7 @@ export class UsersController {
         dto.username,
         dto.userMail,
         dto.userPass,
+        dto.userRoles,
       ),
     );
   }

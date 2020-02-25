@@ -6,9 +6,16 @@ import { User } from './models';
 import { CommandHandlers } from './commands';
 // import { EventHandlers } from './events';
 import { QueryHandlers } from './queries';
+import { PermissionsModule } from 'permissions';
+import { RolesModule } from 'roles';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), CqrsModule],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    CqrsModule,
+    RolesModule,
+    PermissionsModule,
+  ],
   controllers: [UsersController],
   providers: [
     ...CommandHandlers,

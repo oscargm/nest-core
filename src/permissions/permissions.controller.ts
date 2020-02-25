@@ -17,7 +17,7 @@ import {
 import { GetPermissionsQuery, GetPermissionByIdQuery } from './queries';
 import { Permission } from './models';
 
-@Controller('permission')
+@Controller('permissions')
 export class PermissionsController {
   constructor(
     private readonly commandBus: CommandBus,

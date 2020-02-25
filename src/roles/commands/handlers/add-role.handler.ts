@@ -1,4 +1,9 @@
-import { ICommandHandler, EventPublisher, CommandHandler } from '@nestjs/cqrs';
+import {
+  ICommandHandler,
+  EventPublisher,
+  CommandHandler,
+  QueryBus,
+} from '@nestjs/cqrs';
 import * as clc from 'cli-color';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -6,6 +11,9 @@ import { AddRoleCommand } from '../implementations';
 import { Injectable } from '@nestjs/common';
 import { Role } from 'roles/models';
 import { Permission } from 'permissions/models';
+import { PermissionsController } from 'permissions/permissions.controller';
+import { permissionProviders } from 'permissions/providers';
+import { GetPermissionsHandler } from 'permissions/queries/handlers/get-permissions.handler';
 
 @Injectable()
 @CommandHandler(AddRoleCommand)
@@ -23,27 +31,15 @@ export class AddRoleHandler implements ICommandHandler<AddRoleCommand> {
     const role: Role = await this.roleRepository.findOne({
       name: roleName,
     });
-    console.log('rolePermissions.length', rolePermissions.length);
     if (!role) {
-      const permissions: Permission[] = [];
-
-      if (rolePermissions.length > 0) {
-        // TODO: find provider configuration to access to permissions
-        // permissions.push(
-        //   ...(await this.permissionProvider.findByIds(rolePermissions)),
-        // );
-      }
-      console.log('permissions', JSON.stringify(permissions));
-      const newRole = {
-        ...role,
-        name: roleName,
-        enabled: roleEnabled,
-        permissions,
-      };
-      console.log('role', newRole);
-      return this.publisher.mergeObjectContext(
-        await this.roleRepository.save(newRole),
-      );
+      const permissions = await permissionProviders.getMany(rolePermissions);
+      let newRole = new Role();
+      newRole.name = roleName;
+      newRole.enabled = roleEnabled;
+      newRole.permissions = permissions;
+      // return this.publisher.mergeObjectContext(
+      await await this.roleRepository.create(newRole);
+      // );
     } else {
       console.log(clc.red.bold(`role ${role} already exists`));
       return null;

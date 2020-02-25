@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { AbstractAggregatedEntity } from 'common';
 import { Permission } from 'permissions/models';
 
@@ -10,7 +10,9 @@ export class Role extends AbstractAggregatedEntity {
   @Column({ default: false })
   enabled: boolean;
 
-  @ManyToMany(type => Permission)
-  @JoinTable()
+  @OneToMany(
+    type => Permission,
+    permission => permission.id,
+  )
   permissions: Permission[];
 }
