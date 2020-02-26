@@ -4,17 +4,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RolesController } from './roles.controller';
 import { Role } from './models';
 import { CommandHandlers } from './commands';
-// import { EventHandlers } from './events';
 import { QueryHandlers } from './queries';
+import { PermissionsModule } from 'permissions';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Role]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Role]), CqrsModule, PermissionsModule],
   controllers: [RolesController],
-  providers: [
-    ...CommandHandlers,
-    // ...EventHandlers,
-    ...QueryHandlers,
-    // UserMaintenanceSagas,
-  ],
+  providers: [...CommandHandlers, ...QueryHandlers],
 })
 export class RolesModule {}

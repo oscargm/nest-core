@@ -6,6 +6,7 @@ import {
   Body,
   Delete,
   Patch,
+  UseGuards,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { AddPermissionDto, ModPermissionDto } from './interfaces';
@@ -16,7 +17,9 @@ import {
 } from './commands';
 import { GetPermissionsQuery, GetPermissionByIdQuery } from './queries';
 import { Permission } from './models';
+import { JwtAuthGuard } from 'auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('permissions')
 export class PermissionsController {
   constructor(
