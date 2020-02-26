@@ -19,7 +19,7 @@ export class AddUserHandler implements ICommandHandler<AddUserCommand> {
   async execute(command: AddUserCommand): Promise<User> {
     // TODO: Constrain log to development only !!!
     console.log(clc.greenBright('AddUserCommand...'));
-    const { username, userPass, userMail, userRoles } = command;
+    const { username, userPass, userMail, userEnabled, userRoles } = command;
     const user = await this.repository.findOne({ name: username });
     const roles = await roleProviders.getMany(userRoles);
     if (!user) {
@@ -28,6 +28,7 @@ export class AddUserHandler implements ICommandHandler<AddUserCommand> {
         name: username,
         mail: userMail,
         password: userPass,
+        enabled: userEnabled,
         roles,
       };
       console.log('user', newUser);

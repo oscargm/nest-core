@@ -5,14 +5,16 @@ export interface User extends AbstractInterface {
   name: string;
   mail: string;
   password: string;
+  enabled: boolean;
   roles: Role[];
 }
 
 export interface AddUserDto {
-  username: string;
-  userMail: string;
-  userPass: string;
-  userRoles: number[];
+  name: string;
+  mail: string;
+  password: string;
+  enabled: boolean;
+  roles: number[];
 }
 
 export interface ModUserDto extends AddUserDto {}

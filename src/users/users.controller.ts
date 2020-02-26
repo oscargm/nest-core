@@ -13,7 +13,7 @@ import { AddUserCommand, DelUserCommand, ModUserCommand } from './commands';
 import { User } from './models';
 import { GetUsersQuery, GetUserByIdQuery } from './queries';
 
-@Controller('user')
+@Controller('users')
 export class UsersController {
   constructor(
     private readonly commandBus: CommandBus,
@@ -25,10 +25,11 @@ export class UsersController {
     console.log('addUser', dto);
     return this.commandBus.execute(
       new AddUserCommand(
-        dto.username,
-        dto.userMail,
-        dto.userPass,
-        dto.userRoles,
+        dto.name,
+        dto.mail,
+        dto.password,
+        dto.enabled,
+        dto.roles,
       ),
     );
   }
@@ -38,10 +39,11 @@ export class UsersController {
     return this.commandBus.execute(
       new ModUserCommand(
         parseInt(id, 10),
-        dto.username,
-        dto.userMail,
-        dto.userPass,
-        dto.userRoles,
+        dto.name,
+        dto.mail,
+        dto.password,
+        dto.enabled,
+        dto.roles,
       ),
     );
   }
