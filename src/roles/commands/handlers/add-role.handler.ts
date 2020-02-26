@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { AddRoleCommand } from '../implementations';
 import { Injectable } from '@nestjs/common';
 import { Role } from 'roles/models';
-import { Permission } from 'permissions/models';
+import { permissionProviders } from 'permissions/providers';
 
 @Injectable()
 @CommandHandler(AddRoleCommand)
@@ -23,24 +23,13 @@ export class AddRoleHandler implements ICommandHandler<AddRoleCommand> {
     const role: Role = await this.roleRepository.findOne({
       name: roleName,
     });
-    console.log('rolePermissions.length', rolePermissions.length);
     if (!role) {
-      const permissions: Permission[] = [];
-
-      if (rolePermissions.length > 0) {
-        // TODO: find provider configuration to access to permissions
-        // permissions.push(
-        //   ...(await this.permissionProvider.findByIds(rolePermissions)),
-        // );
-      }
-      console.log('permissions', JSON.stringify(permissions));
-      const newRole = {
-        ...role,
-        name: roleName,
-        enabled: roleEnabled,
-        permissions,
-      };
-      console.log('role', newRole);
+      const permissions = await permissionProviders.getMany(rolePermissions);
+      const newRole = new Role();
+      newRole.name = roleName;
+      newRole.enabled = roleEnabled;
+      newRole.permissions = permissions;
+      console.log(clc.green.bold('new role', JSON.stringify(newRole)));
       return this.publisher.mergeObjectContext(
         await this.roleRepository.save(newRole),
       );

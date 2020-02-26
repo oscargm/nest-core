@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { AddUserCommand } from '../implementations';
 import { Injectable } from '@nestjs/common';
 import { User } from 'users/models';
+import { roleProviders } from 'roles/providers';
 
 @Injectable()
 @CommandHandler(AddUserCommand)
@@ -18,14 +19,17 @@ export class AddUserHandler implements ICommandHandler<AddUserCommand> {
   async execute(command: AddUserCommand): Promise<User> {
     // TODO: Constrain log to development only !!!
     console.log(clc.greenBright('AddUserCommand...'));
-    const { username, userPass, userMail } = command;
+    const { username, userPass, userMail, userEnabled, userRoles } = command;
     const user = await this.repository.findOne({ name: username });
+    const roles = await roleProviders.getMany(userRoles);
     if (!user) {
       const newUser = {
         ...user,
         name: username,
         mail: userMail,
         password: userPass,
+        enabled: userEnabled,
+        roles,
       };
       console.log('user', newUser);
       return this.publisher.mergeObjectContext(
